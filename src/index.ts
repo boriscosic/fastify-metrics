@@ -172,9 +172,13 @@ const fastifyMetricsPlugin: FastifyPluginAsync<PluginOptions> =
           const labels = {
             [labelNames.method]: method,
             [labelNames.route]: routeId,
-            [labelNames.status]: statusCode,
-            [labelNames.operation]: (request as any).query.operation
+            [labelNames.status]: statusCode
           };
+
+          if ((request as any).query.operation) {
+            labels.operation = (request as any).query.operation;
+          }
+
           request.metrics.sum(labels);
           request.metrics.hist(labels);
         }
