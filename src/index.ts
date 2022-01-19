@@ -86,6 +86,7 @@ const fastifyMetricsPlugin: FastifyPluginAsync<PluginOptions> =
       method: labelOverrides?.method ? labelOverrides?.method : 'method',
       status: labelOverrides?.status ? labelOverrides?.status : 'status_code',
       route: labelOverrides?.route ? labelOverrides?.route : 'route',
+      operation: labelOverrides?.operation ? labelOverrides?.operation : 'operation',
     };
 
     if (enableRouteMetrics) {
@@ -111,14 +112,14 @@ const fastifyMetricsPlugin: FastifyPluginAsync<PluginOptions> =
         histogram: {
           name: 'http_request_duration_seconds',
           help: 'request duration in seconds',
-          labelNames: [labelNames.status, labelNames.method, labelNames.route],
+          labelNames: [labelNames.status, labelNames.method, labelNames.route, labelNames.operation],
           buckets: [0.05, 0.1, 0.5, 1, 3, 5, 10],
           ...metrics.histogram,
         },
         summary: {
           name: 'http_request_summary_seconds',
           help: 'request duration in seconds summary',
-          labelNames: [labelNames.status, labelNames.method, labelNames.route],
+          labelNames: [labelNames.status, labelNames.method, labelNames.route, labelNames.operation],
           percentiles: [0.5, 0.9, 0.95, 0.99],
           ...metrics.summary,
         },
@@ -172,6 +173,7 @@ const fastifyMetricsPlugin: FastifyPluginAsync<PluginOptions> =
             [labelNames.method]: method,
             [labelNames.route]: routeId,
             [labelNames.status]: statusCode,
+            [labelNames.operation]: request?.query?.operation
           };
           request.metrics.sum(labels);
           request.metrics.hist(labels);

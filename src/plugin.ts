@@ -86,6 +86,7 @@ export interface PluginOptions {
     method?: string;
     route?: string;
     status?: string;
+    operation?: string;
   };
   /**
    * Ignore HEAD requests
