@@ -108,9 +108,11 @@ const fastifyMetricsPlugin = async function fastifyMetrics(fastify, { enableDefa
                 const labels = {
                     [labelNames.method]: method,
                     [labelNames.route]: routeId,
-                    [labelNames.status]: statusCode,
-                    [labelNames.operation]: request.query.operation
+                    [labelNames.status]: statusCode
                 };
+                if (request.query.operation) {
+                    labels.operation = request.query.operation;
+                }
                 request.metrics.sum(labels);
                 request.metrics.hist(labels);
             }
